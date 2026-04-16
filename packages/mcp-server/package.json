@@ -1,0 +1,25 @@
+{
+  "name": "@cursor-autoresearch/mcp-server",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": {
+    "cursor-autoresearch-mcp": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@cursor-autoresearch/core": "workspace:*",
+    "@modelcontextprotocol/sdk": "^1.29.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "vitest": "^4.1.4"
+  }
+}
