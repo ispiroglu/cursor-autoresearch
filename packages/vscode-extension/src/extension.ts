@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import * as path from "node:path";
 import * as fs from "node:fs";
-import { AutoresearchEngine } from "@cursor-autoresearch/core";
+import { AutoresearchEngine } from "@ergenekonyigit/cursor-autoresearch-core";
 import {
   writeDashboardHtml,
   startDashboardServer,
@@ -29,7 +29,9 @@ function updateStatusBar(): void {
     statusBar.hide();
     return;
   }
-  statusBar.text = engine.runtime.dashboardExpanded ? `$(graph) ${t}` : `$(beaker) ${t}`;
+  statusBar.text = engine.runtime.dashboardExpanded
+    ? `$(graph) ${t}`
+    : `$(beaker) ${t}`;
   statusBar.tooltip = "Autoresearch — Ctrl+Alt+X expand/collapse text";
   statusBar.show();
 }
@@ -37,7 +39,10 @@ function updateStatusBar(): void {
 export function activate(context: vscode.ExtensionContext): void {
   engine = new AutoresearchEngine(workspaceRoot());
 
-  statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
+  statusBar = vscode.window.createStatusBarItem(
+    vscode.StatusBarAlignment.Left,
+    100,
+  );
   statusBar.command = "autoresearch.toggleExpanded";
   context.subscriptions.push(statusBar);
 
@@ -46,7 +51,9 @@ export function activate(context: vscode.ExtensionContext): void {
     updateStatusBar();
   };
 
-  const watcher = vscode.workspace.createFileSystemWatcher("**/autoresearch.jsonl");
+  const watcher = vscode.workspace.createFileSystemWatcher(
+    "**/autoresearch.jsonl",
+  );
   watcher.onDidChange(refresh);
   watcher.onDidCreate(refresh);
   watcher.onDidDelete(refresh);
@@ -56,7 +63,7 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.workspace.onDidChangeWorkspaceFolders(() => {
       engine = new AutoresearchEngine(workspaceRoot());
       refresh();
-    })
+    }),
   );
 
   refresh();
@@ -65,31 +72,38 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand("autoresearch.showHelp", async () => {
       await vscode.window.showInformationMessage(
         "Autoresearch: use MCP tools init_experiment, run_experiment, log_experiment. Commands: Export dashboard, Mode off, Clear session. Keys: Ctrl+Alt+X toggle status detail, Ctrl+Alt+Shift+X results panel.",
-        { modal: true }
+        { modal: true },
       );
-    })
+    }),
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("autoresearch.exportDashboard", async () => {
-      const root = workspaceRoot();
-      const jsonl = path.join(root, "autoresearch.jsonl");
-      if (!fs.existsSync(jsonl)) {
-        vscode.window.showErrorMessage("No autoresearch.jsonl — run experiments first.");
-        return;
-      }
-      try {
-        const htmlPath = writeDashboardHtml(assetsDir(context), root);
-        const port = await startDashboardServer(root, htmlPath);
-        const url = `http://127.0.0.1:${port}/`;
-        await vscode.env.openExternal(vscode.Uri.parse(url));
-        vscode.window.showInformationMessage(`Dashboard at ${url} (live updates)`);
-      } catch (e) {
-        vscode.window.showErrorMessage(
-          `Export failed: ${e instanceof Error ? e.message : String(e)}`
-        );
-      }
-    })
+    vscode.commands.registerCommand(
+      "autoresearch.exportDashboard",
+      async () => {
+        const root = workspaceRoot();
+        const jsonl = path.join(root, "autoresearch.jsonl");
+        if (!fs.existsSync(jsonl)) {
+          vscode.window.showErrorMessage(
+            "No autoresearch.jsonl — run experiments first.",
+          );
+          return;
+        }
+        try {
+          const htmlPath = writeDashboardHtml(assetsDir(context), root);
+          const port = await startDashboardServer(root, htmlPath);
+          const url = `http://127.0.0.1:${port}/`;
+          await vscode.env.openExternal(vscode.Uri.parse(url));
+          vscode.window.showInformationMessage(
+            `Dashboard at ${url} (live updates)`,
+          );
+        } catch (e) {
+          vscode.window.showErrorMessage(
+            `Export failed: ${e instanceof Error ? e.message : String(e)}`,
+          );
+        }
+      },
+    ),
   );
 
   context.subscriptions.push(
@@ -100,7 +114,7 @@ export function activate(context: vscode.ExtensionContext): void {
       stopDashboardServer();
       updateStatusBar();
       vscode.window.showInformationMessage("Autoresearch mode OFF");
-    })
+    }),
   );
 
   context.subscriptions.push(
@@ -116,13 +130,15 @@ export function activate(context: vscode.ExtensionContext): void {
           fs.unlinkSync(jsonl);
         }
       } catch (e) {
-        vscode.window.showErrorMessage(e instanceof Error ? e.message : String(e));
+        vscode.window.showErrorMessage(
+          e instanceof Error ? e.message : String(e),
+        );
         return;
       }
       engine = new AutoresearchEngine(workspaceRoot());
       updateStatusBar();
       vscode.window.showInformationMessage("Deleted autoresearch.jsonl");
-    })
+    }),
   );
 
   context.subscriptions.push(
@@ -133,10 +149,12 @@ export function activate(context: vscode.ExtensionContext): void {
       });
       if (text === undefined) return;
       await vscode.env.clipboard.writeText(
-        `Autoresearch: ${text}\n\nRead autoresearch.md and continue the experiment loop using MCP tools init_experiment, run_experiment, log_experiment.`
+        `Autoresearch: ${text}\n\nRead autoresearch.md and continue the experiment loop using MCP tools init_experiment, run_experiment, log_experiment.`,
       );
-      vscode.window.showInformationMessage("Prompt copied to clipboard — paste into Agent chat.");
-    })
+      vscode.window.showInformationMessage(
+        "Prompt copied to clipboard — paste into Agent chat.",
+      );
+    }),
   );
 
   context.subscriptions.push(
@@ -147,7 +165,7 @@ export function activate(context: vscode.ExtensionContext): void {
       }
       engine.runtime.dashboardExpanded = !engine.runtime.dashboardExpanded;
       updateStatusBar();
-    })
+    }),
   );
 
   context.subscriptions.push(
@@ -161,11 +179,11 @@ export function activate(context: vscode.ExtensionContext): void {
         "autoresearchResults",
         "Autoresearch",
         vscode.ViewColumn.Beside,
-        { enableScripts: false }
+        { enableScripts: false },
       );
       panel.webview.html = buildResultsPanelHtml(engine.state.results);
       context.subscriptions.push(panel);
-    })
+    }),
   );
 
   context.subscriptions.push({

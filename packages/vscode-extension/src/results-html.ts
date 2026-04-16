@@ -1,4 +1,4 @@
-import type { ExperimentResult } from "@cursor-autoresearch/core";
+import type { ExperimentResult } from "@ergenekonyigit/cursor-autoresearch-core";
 
 export function escapeHtml(s: string): string {
   return s
@@ -12,7 +12,7 @@ export function buildResultsPanelHtml(results: ExperimentResult[]): string {
   const rows = results
     .map(
       (r, i) =>
-        `<tr><td>${i + 1}</td><td>${escapeHtml(r.commit)}</td><td>${r.metric}</td><td>${r.status}</td><td>${escapeHtml(r.description)}</td></tr>`
+        `<tr><td>${i + 1}</td><td>${escapeHtml(r.commit)}</td><td>${r.metric}</td><td>${r.status}</td><td>${escapeHtml(r.description)}</td></tr>`,
     )
     .join("");
   return `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>

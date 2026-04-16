@@ -1,5 +1,5 @@
 {
-  "name": "@cursor-autoresearch/mcp-server",
+  "name": "@ergenekonyigit/cursor-autoresearch-mcp-server",
   "version": "1.0.0",
   "type": "module",
   "bin": {
@@ -15,7 +15,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@cursor-autoresearch/core": "workspace:*",
+    "@ergenekonyigit/cursor-autoresearch-core": "workspace:*",
     "@modelcontextprotocol/sdk": "^1.29.0"
   },
   "devDependencies": {

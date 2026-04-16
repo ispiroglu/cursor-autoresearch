@@ -8,11 +8,13 @@ import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
-import { AutoresearchEngine } from "@cursor-autoresearch/core";
+import { AutoresearchEngine } from "@ergenekonyigit/cursor-autoresearch-core";
 import { AUTORESEARCH_MCP_TOOLS } from "./tools.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const PKG = JSON.parse(readFileSync(join(__dirname, "../package.json"), "utf-8")) as {
+const PKG = JSON.parse(
+  readFileSync(join(__dirname, "../package.json"), "utf-8"),
+) as {
   version: string;
 };
 
@@ -32,7 +34,7 @@ async function main(): Promise<void> {
     },
     {
       capabilities: { tools: {} },
-    }
+    },
   );
 
   server.setRequestHandler(ListToolsRequestSchema, () => ({
@@ -41,7 +43,7 @@ async function main(): Promise<void> {
 
   server.setRequestHandler(CallToolRequestSchema, async (request) => {
     const name = request.params.name;
-    const args = (request.params.arguments ?? {});
+    const args = request.params.arguments ?? {};
 
     try {
       if (name === "init_experiment") {
@@ -49,8 +51,13 @@ async function main(): Promise<void> {
           name: String(args["name"] ?? ""),
           metric_name: String(args["metric_name"] ?? ""),
           metric_unit:
-            args["metric_unit"] !== undefined ? String(args["metric_unit"]) : undefined,
-          direction: args["direction"] !== undefined ? String(args["direction"]) : undefined,
+            args["metric_unit"] !== undefined
+              ? String(args["metric_unit"])
+              : undefined,
+          direction:
+            args["direction"] !== undefined
+              ? String(args["direction"])
+              : undefined,
         });
         return {
           content: [{ type: "text", text: r.text }],
@@ -61,7 +68,9 @@ async function main(): Promise<void> {
         const r = await engine.runExperiment({
           command: String(args["command"] ?? ""),
           timeout_seconds:
-            typeof args["timeout_seconds"] === "number" ? args["timeout_seconds"] : undefined,
+            typeof args["timeout_seconds"] === "number"
+              ? args["timeout_seconds"]
+              : undefined,
           checks_timeout_seconds:
             typeof args["checks_timeout_seconds"] === "number"
               ? args["checks_timeout_seconds"]
@@ -76,15 +85,23 @@ async function main(): Promise<void> {
         const r = await engine.logExperiment({
           commit: String(args["commit"] ?? ""),
           metric: Number(args["metric"]),
-          status: args["status"] as "keep" | "discard" | "crash" | "checks_failed",
+          status: args["status"] as
+            | "keep"
+            | "discard"
+            | "crash"
+            | "checks_failed",
           description: String(args["description"] ?? ""),
           metrics:
-            args["metrics"] && typeof args["metrics"] === "object" && args["metrics"] !== null
+            args["metrics"] &&
+            typeof args["metrics"] === "object" &&
+            args["metrics"] !== null
               ? (args["metrics"] as Record<string, number>)
               : undefined,
           force: typeof args["force"] === "boolean" ? args["force"] : undefined,
           asi:
-            args["asi"] && typeof args["asi"] === "object" && args["asi"] !== null
+            args["asi"] &&
+            typeof args["asi"] === "object" &&
+            args["asi"] !== null
               ? (args["asi"] as Record<string, unknown>)
               : undefined,
         });

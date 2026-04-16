@@ -67,15 +67,15 @@ Port of **[pi-autoresearch](https://github.com/davebcn87/pi-autoresearch)** for 
 
 ## Technology stack
 
-| Layer               | Details                                                                    |
-| ------------------- | -------------------------------------------------------------------------- |
-| **Runtime**         | Node.js **≥ 22** (CI uses 22.x; see [`.node-version`](.node-version))      |
-| **Package manager** | **pnpm** 10.x (pinned in root `packageManager`)                            |
-| **Language**        | TypeScript **6.x**                                                         |
-| **Core / MCP**      | `@modelcontextprotocol/sdk`, workspace package `@cursor-autoresearch/core` |
-| **Extension**       | esbuild bundle, `@vscode/vsce`, VS Code engine **^1.105.0**                |
-| **Tests**           | Vitest **4.x** (`pnpm test` runs all packages)                             |
-| **Lint**            | ESLint **10.x** (`pnpm lint`)                                              |
+| Layer               | Details                                                                                   |
+| ------------------- | ----------------------------------------------------------------------------------------- |
+| **Runtime**         | Node.js **≥ 22** (CI uses 22.x; see [`.node-version`](.node-version))                     |
+| **Package manager** | **pnpm** 10.x (pinned in root `packageManager`)                                           |
+| **Language**        | TypeScript **6.x**                                                                        |
+| **Core / MCP**      | `@modelcontextprotocol/sdk`, workspace package `@ergenekonyigit/cursor-autoresearch-core` |
+| **Extension**       | esbuild bundle, `@vscode/vsce`, VS Code engine **^1.105.0**                               |
+| **Tests**           | Vitest **4.x** (`pnpm test` runs all packages)                                            |
+| **Lint**            | ESLint **10.x** (`pnpm lint`)                                                             |
 
 ---
 

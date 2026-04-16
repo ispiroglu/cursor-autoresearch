@@ -73,7 +73,7 @@
     "package": "vsce package --no-dependencies"
   },
   "dependencies": {
-    "@cursor-autoresearch/core": "workspace:*"
+    "@ergenekonyigit/cursor-autoresearch-core": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^25.6.0",

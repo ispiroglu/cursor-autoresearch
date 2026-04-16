@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { ExperimentResult } from "@cursor-autoresearch/core";
+import type { ExperimentResult } from "@ergenekonyigit/cursor-autoresearch-core";
 import { buildResultsPanelHtml, escapeHtml } from "./results-html.js";
 
 describe("escapeHtml", () => {

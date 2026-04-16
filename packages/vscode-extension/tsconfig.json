@@ -2,10 +2,12 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "noEmit": true,
-    "rootDir": "src",
     "types": ["node", "vscode"],
     "module": "ESNext",
-    "moduleResolution": "bundler"
+    "moduleResolution": "bundler",
+    "paths": {
+      "@ergenekonyigit/cursor-autoresearch-core": ["../core/src/index.ts"]
+    }
   },
   "include": ["src/**/*.ts"]
 }

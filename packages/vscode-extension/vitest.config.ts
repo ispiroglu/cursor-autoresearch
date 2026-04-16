@@ -7,7 +7,10 @@ const packageRoot = process.cwd();
 export default defineConfig({
   resolve: {
     alias: {
-      "@cursor-autoresearch/core": path.resolve(packageRoot, "../core/src/index.ts"),
+      "@ergenekonyigit/cursor-autoresearch-core": path.resolve(
+        packageRoot,
+        "../core/src/index.ts",
+      ),
     },
   },
   test: {
