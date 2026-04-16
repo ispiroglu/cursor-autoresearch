@@ -1,0 +1,26 @@
+{
+  "name": "cursor-autoresearch",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Autonomous experiment loop for Cursor — port of pi-autoresearch",
+  "license": "MIT",
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "install:cursor": "bash scripts/install.sh",
+    "clean": "bash scripts/clean.sh",
+    "typecheck": "pnpm --filter @cursor-autoresearch/core exec tsc --noEmit -p tsconfig.json && pnpm --filter @cursor-autoresearch/mcp-server exec tsc --noEmit -p tsconfig.json && pnpm --filter autoresearch exec tsc --noEmit -p tsconfig.json",
+    "build": "pnpm --filter @cursor-autoresearch/core build && pnpm --filter @cursor-autoresearch/mcp-server build && pnpm --filter autoresearch run build",
+    "test": "pnpm --filter @cursor-autoresearch/core test && pnpm --filter @cursor-autoresearch/mcp-server test && pnpm --filter autoresearch test",
+    "package:extension": "pnpm build && pnpm --filter autoresearch exec vsce package --no-dependencies",
+    "lint": "eslint . --max-warnings 0 --no-warn-ignored"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.2.0",
+    "typescript": "^6.0.2",
+    "typescript-eslint": "^8.58.2"
+  }
+}
