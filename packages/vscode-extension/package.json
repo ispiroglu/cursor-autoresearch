@@ -10,8 +10,9 @@
     "url": "https://github.com/ergenekonyigit/cursor-autoresearch.git",
     "directory": "packages/vscode-extension"
   },
+  "icon": "assets/icon.png",
   "engines": {
-    "vscode": "^1.85.0"
+    "vscode": "^1.105.0"
   },
   "categories": [
     "Other"
@@ -76,7 +77,7 @@
   },
   "devDependencies": {
     "@types/node": "^25.6.0",
-    "@types/vscode": "^1.116.0",
+    "@types/vscode": "^1.105.0",
     "@vscode/vsce": "^3.9.0",
     "esbuild": "^0.28.0",
     "typescript": "^6.0.2",

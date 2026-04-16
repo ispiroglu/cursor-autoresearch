@@ -5,7 +5,6 @@ import { tmpdir } from "node:os";
 import type { ServerResponse } from "node:http";
 
 const TITLE_PLACEHOLDER = "__AUTORESEARCH_TITLE__";
-const LOGO_PLACEHOLDER = "__AUTORESEARCH_LOGO__";
 
 const CONTENT_TYPES: Record<string, string> = {
   ".html": "text/html; charset=utf-8",
@@ -32,7 +31,9 @@ function escapeHtml(text: string): string {
 }
 
 function readJsonlContent(workDir: string): string {
-  return fs.readFileSync(path.join(workDir, "autoresearch.jsonl"), "utf-8").trim();
+  return fs
+    .readFileSync(path.join(workDir, "autoresearch.jsonl"), "utf-8")
+    .trim();
 }
 
 export function extractSessionName(jsonlContent: string): string {
@@ -46,23 +47,18 @@ export function extractSessionName(jsonlContent: string): string {
   }
 }
 
-function logoDataUrl(assetsDir: string): string {
-  const logoPath = path.join(assetsDir, "logo.webp");
-  const bytes = fs.readFileSync(logoPath);
-  return `data:image/webp;base64,${bytes.toString("base64")}`;
-}
-
 export function writeDashboardHtml(
   extensionAssetsDir: string,
-  workDir: string
+  workDir: string,
 ): string {
   const jsonlContent = readJsonlContent(workDir);
   const sessionName = extractSessionName(jsonlContent);
   const templatePath = path.join(extensionAssetsDir, "template.html");
   let html = fs.readFileSync(templatePath, "utf-8");
   html = html.replace(TITLE_PLACEHOLDER, escapeHtml(sessionName));
-  html = html.replace(LOGO_PLACEHOLDER, logoDataUrl(extensionAssetsDir));
-  const exportDir = fs.mkdtempSync(path.join(tmpdir(), "autoresearch-dashboard-"));
+  const exportDir = fs.mkdtempSync(
+    path.join(tmpdir(), "autoresearch-dashboard-"),
+  );
   const dest = path.join(exportDir, "index.html");
   fs.writeFileSync(dest, html);
   return dest;
@@ -98,9 +94,14 @@ function registerSseClient(res: ServerResponse): void {
   res.on("close", () => dashboardSseClients.delete(res));
 }
 
-function resolveServedFile(resolvedWorkDir: string, requestPath: string, dashboardHtmlPath: string): string | null {
+function resolveServedFile(
+  resolvedWorkDir: string,
+  requestPath: string,
+  dashboardHtmlPath: string,
+): string | null {
   if (requestPath === "/") return dashboardHtmlPath;
-  if (requestPath === "/autoresearch.jsonl") return path.join(resolvedWorkDir, "autoresearch.jsonl");
+  if (requestPath === "/autoresearch.jsonl")
+    return path.join(resolvedWorkDir, "autoresearch.jsonl");
   return null;
 }
 
@@ -128,7 +129,7 @@ export function stopDashboardServer(): void {
 
 export function startDashboardServer(
   workDir: string,
-  dashboardHtmlPath: string
+  dashboardHtmlPath: string,
 ): Promise<number> {
   return new Promise((resolve, reject) => {
     const resolvedWorkDir = path.resolve(workDir);
@@ -154,7 +155,11 @@ export function startDashboardServer(
         return;
       }
 
-      const filePath = resolveServedFile(resolvedWorkDir, url.pathname, resolvedHtml);
+      const filePath = resolveServedFile(
+        resolvedWorkDir,
+        url.pathname,
+        resolvedHtml,
+      );
       if (!filePath) {
         res.writeHead(404);
         res.end();

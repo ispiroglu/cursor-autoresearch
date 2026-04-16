@@ -2,11 +2,11 @@
 
 **Autoresearch** is a single workflow for **Cursor** and **VS Code**: MCP tools drive a measurable optimization loop, results append to `autoresearch.jsonl`, you can add an optional browser dashboard and packaged **agent skills** (`autoresearch-create`, `autoresearch-finalize`).
 
-| Field | Details |
-| ----- | ------- |
-| **Open-source project name** | Cursor Autoresearch |
-| **GitHub repo** | [cursor-autoresearch](https://github.com/ergenekonyigit/cursor-autoresearch) (easy to discover and share) |
-| **Product / UI name** | **Autoresearch** (MCP server and marketplace extension) |
+| Field                        | Details                                                                                                   |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------- |
+| **Open-source project name** | Cursor Autoresearch                                                                                       |
+| **GitHub repo**              | [cursor-autoresearch](https://github.com/ergenekonyigit/cursor-autoresearch) (easy to discover and share) |
+| **Product / UI name**        | **Autoresearch** (MCP server and marketplace extension)                                                   |
 
 Port of **[pi-autoresearch](https://github.com/davebcn87/pi-autoresearch)** for editors that use **[pi](https://pi.dev/)** upstream in the terminal. Same idea as **[karpathy/autoresearch](https://github.com/karpathy/autoresearch)**: try a change, benchmark, keep wins, revert losses, repeat — for **any** primary metric (test time, bundle size, build time, Lighthouse, and more).
 
@@ -22,6 +22,7 @@ Port of **[pi-autoresearch](https://github.com/davebcn87/pi-autoresearch)** for 
 - [Install for Cursor](#install-for-cursor)
 - [Install for VS Code](#install-for-vs-code)
 - [Extension (optional)](#extension-optional)
+- [Screenshot](#screenshot)
 - [Skills (optional)](#skills-optional)
 - [Cursor rule (optional)](#cursor-rule-optional)
 - [Example: faster tests](#example-faster-tests)
@@ -48,12 +49,12 @@ Port of **[pi-autoresearch](https://github.com/davebcn87/pi-autoresearch)** for 
 
 **Typical workspace layout**
 
-| File / convention | Role |
-| ----------------- | ---- |
-| `autoresearch.md` | Goal, scope, “what we tried” — keep it current. |
-| `autoresearch.sh` | Repeatable benchmark; metric names must match `init_experiment`. |
-| `autoresearch.config.json` | Optional — e.g. `maxIterations`, `workingDir`. |
-| Branch name | Often `autoresearch/<goal>-<date>`. |
+| File / convention          | Role                                                             |
+| -------------------------- | ---------------------------------------------------------------- |
+| `autoresearch.md`          | Goal, scope, “what we tried” — keep it current.                  |
+| `autoresearch.sh`          | Repeatable benchmark; metric names must match `init_experiment`. |
+| `autoresearch.config.json` | Optional — e.g. `maxIterations`, `workingDir`.                   |
+| Branch name                | Often `autoresearch/<goal>-<date>`.                              |
 
 > [!NOTE]
 > `AUTORESEARCH_CWD` must point at the **project you optimize** (where `autoresearch.jsonl` and `autoresearch.md` live), usually `${workspaceFolder}` — not necessarily the clone of this repo.
@@ -62,15 +63,15 @@ Port of **[pi-autoresearch](https://github.com/davebcn87/pi-autoresearch)** for 
 
 ## Technology stack
 
-| Layer | Details |
-| ----- | ------- |
-| **Runtime** | Node.js **≥ 22** (CI uses 22.x; see [`.node-version`](.node-version)) |
-| **Package manager** | **pnpm** 10.x (pinned in root `packageManager`) |
-| **Language** | TypeScript **6.x** |
-| **Core / MCP** | `@modelcontextprotocol/sdk`, workspace package `@cursor-autoresearch/core` |
-| **Extension** | esbuild bundle, `@vscode/vsce`, VS Code engine **^1.85.0** |
-| **Tests** | Vitest **4.x** (`pnpm test` runs all packages) |
-| **Lint** | ESLint **10.x** (`pnpm lint`) |
+| Layer               | Details                                                                    |
+| ------------------- | -------------------------------------------------------------------------- |
+| **Runtime**         | Node.js **≥ 22** (CI uses 22.x; see [`.node-version`](.node-version))      |
+| **Package manager** | **pnpm** 10.x (pinned in root `packageManager`)                            |
+| **Language**        | TypeScript **6.x**                                                         |
+| **Core / MCP**      | `@modelcontextprotocol/sdk`, workspace package `@cursor-autoresearch/core` |
+| **Extension**       | esbuild bundle, `@vscode/vsce`, VS Code engine **^1.105.0**                |
+| **Tests**           | Vitest **4.x** (`pnpm test` runs all packages)                             |
+| **Lint**            | ESLint **10.x** (`pnpm lint`)                                              |
 
 ---
 
@@ -104,12 +105,12 @@ Clones to `~/.local/share/cursor-autoresearch` by default, merges `~/.cursor/mcp
 curl -fsSL https://raw.githubusercontent.com/ergenekonyigit/cursor-autoresearch/main/scripts/bootstrap.sh | bash
 ```
 
-| Variable | Default | Meaning |
-| -------- | --------- | ------- |
-| `INSTALL_DIR` | `$HOME/.local/share/cursor-autoresearch` | Clone path |
-| `REPO_URL` | `https://github.com/ergenekonyigit/cursor-autoresearch.git` | Git remote |
-| `SKIP_MCP` | — | Set to `1` to skip writing `~/.cursor/mcp.json` |
-| `SKIP_SKILLS` | — | Set to `1` to skip symlinks under `~/.agents/skills/` |
+| Variable      | Default                                                     | Meaning                                               |
+| ------------- | ----------------------------------------------------------- | ----------------------------------------------------- |
+| `INSTALL_DIR` | `$HOME/.local/share/cursor-autoresearch`                    | Clone path                                            |
+| `REPO_URL`    | `https://github.com/ergenekonyigit/cursor-autoresearch.git` | Git remote                                            |
+| `SKIP_MCP`    | —                                                           | Set to `1` to skip writing `~/.cursor/mcp.json`       |
+| `SKIP_SKILLS` | —                                                           | Set to `1` to skip symlinks under `~/.agents/skills/` |
 
 ### Already cloned this repo?
 
@@ -126,7 +127,9 @@ Restart **Cursor** so MCP reloads.
   "mcpServers": {
     "autoresearch": {
       "command": "node",
-      "args": ["/ABSOLUTE/PATH/TO/cursor-autoresearch/packages/mcp-server/dist/index.js"],
+      "args": [
+        "/ABSOLUTE/PATH/TO/cursor-autoresearch/packages/mcp-server/dist/index.js"
+      ],
       "env": {
         "AUTORESEARCH_CWD": "${workspaceFolder}"
       }
@@ -155,7 +158,9 @@ Use this when you work in **VS Code** with **GitHub Copilot** and [MCP servers](
     "autoresearch": {
       "type": "stdio",
       "command": "node",
-      "args": ["/ABSOLUTE/PATH/TO/cursor-autoresearch/packages/mcp-server/dist/index.js"],
+      "args": [
+        "/ABSOLUTE/PATH/TO/cursor-autoresearch/packages/mcp-server/dist/index.js"
+      ],
       "env": {
         "AUTORESEARCH_CWD": "${workspaceFolder}"
       }
@@ -189,6 +194,12 @@ pnpm package:extension
 
 ---
 
+## Screenshot
+
+![Autoresearch dashboard screenshot](packages/vscode-extension/assets/screenshot.png)
+
+---
+
 ## Skills (optional)
 
 If you did not use bootstrap or `pnpm install:cursor`:
@@ -210,7 +221,7 @@ You can also symlink into `.cursor/skills/` (e.g. `autoresearch-create` → `../
 
 ## Example: faster tests (e.g. Vitest)
 
-**Prompt idea:** *Reduce how long `npm run test` takes — set up autoresearch and speed it up.* (Use `pnpm test`, `pnpm vitest run`, etc., to match your repo.)
+**Prompt idea:** _Reduce how long `npm run test` takes — set up autoresearch and speed it up._ (Use `pnpm test`, `pnpm vitest run`, etc., to match your repo.)
 
 1. Create a branch such as `autoresearch/vitest-speed-<date>`.
 2. Add `autoresearch.md` and `autoresearch.sh`, commit so the next session can resume.
@@ -234,10 +245,10 @@ If you use `pnpm exec vitest run`, substitute accordingly. For very fast suites,
 
 Place `autoresearch.config.json` next to `autoresearch.jsonl` — under the directory `AUTORESEARCH_CWD` points at (usually `${workspaceFolder}`), i.e. your **optimized project**, not the `cursor-autoresearch` clone.
 
-| Key | Purpose |
-| --- | ------- |
-| `maxIterations` | Cap on counted runs in the current segment; start a new segment with `init_experiment` after that. Omit for no cap. |
-| `workingDir` | Run benchmarks / resolve paths relative to this directory (absolute or relative to workspace root). The JSON file stays at workspace root; validation fails if the path is missing or not a directory. |
+| Key             | Purpose                                                                                                                                                                                                |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `maxIterations` | Cap on counted runs in the current segment; start a new segment with `init_experiment` after that. Omit for no cap.                                                                                    |
+| `workingDir`    | Run benchmarks / resolve paths relative to this directory (absolute or relative to workspace root). The JSON file stays at workspace root; validation fails if the path is missing or not a directory. |
 
 ```json
 {
@@ -258,14 +269,14 @@ pnpm build
 pnpm test
 ```
 
-| Command | Purpose |
-| ------- | ------- |
-| `pnpm lint` | ESLint across the repo |
-| `pnpm typecheck` | TypeScript `--noEmit` for all workspace packages |
-| `pnpm build` | Build `core`, `mcp-server`, and the VS Code extension |
-| `pnpm test` | All package tests |
-| `pnpm clean` | Remove `packages/*/dist` |
-| `pnpm package:extension` | Produce `.vsix` under `packages/vscode-extension/` |
+| Command                  | Purpose                                               |
+| ------------------------ | ----------------------------------------------------- |
+| `pnpm lint`              | ESLint across the repo                                |
+| `pnpm typecheck`         | TypeScript `--noEmit` for all workspace packages      |
+| `pnpm build`             | Build `core`, `mcp-server`, and the VS Code extension |
+| `pnpm test`              | All package tests                                     |
+| `pnpm clean`             | Remove `packages/*/dist`                              |
+| `pnpm package:extension` | Produce `.vsix` under `packages/vscode-extension/`    |
 
 After `pnpm clean`, run `pnpm build` before `pnpm test` so workspace resolution and Vitest aliases stay consistent.
 
