@@ -1,0 +1,91 @@
+name: Release
+
+# Publishes a GitHub Release with the VSIX when you push a version tag (e.g. v0.1.0).
+# Optional secrets: VSCE_PAT (Visual Studio Marketplace), OVSX_PAT (Open VSX).
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Verify tag matches extension version
+        run: |
+          EXT_VER=$(node -p "require('./packages/vscode-extension/package.json').version")
+          TAG="${GITHUB_REF_NAME#v}"
+          if [ "$TAG" != "$EXT_VER" ]; then
+            echo "::error::Tag ${GITHUB_REF_NAME} does not match packages/vscode-extension version ${EXT_VER}"
+            exit 1
+          fi
+          echo "Tag matches extension version ${EXT_VER}"
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with:
+          version: 10.33.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "22"
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Build and test
+        run: pnpm build && pnpm test
+
+      - name: Package VS Code extension (.vsix)
+        run: pnpm package:extension
+
+      - name: Upload VSIX artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: vscode-extension-vsix
+          path: packages/vscode-extension/*.vsix
+          if-no-files-found: error
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
+        with:
+          files: packages/vscode-extension/*.vsix
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to Visual Studio Marketplace
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        run: |
+          if [ -z "${VSCE_PAT:-}" ]; then
+            echo "VSCE_PAT not set — skipping Visual Studio Marketplace publish."
+            exit 0
+          fi
+          pnpm --filter autoresearch exec vsce publish --no-dependencies
+
+      - name: Publish to Open VSX Registry
+        env:
+          OVSX_PAT: ${{ secrets.OVSX_PAT }}
+        run: |
+          if [ -z "${OVSX_PAT:-}" ]; then
+            echo "OVSX_PAT not set — skipping Open VSX publish."
+            exit 0
+          fi
+          npx --yes ovsx publish packages/vscode-extension/*.vsix --pat "$OVSX_PAT"
