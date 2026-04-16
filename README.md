@@ -225,7 +225,7 @@ pnpm package:extension
 
 ## Screenshot
 
-![Autoresearch dashboard screenshot](packages/vscode-extension/assets/screenshot.jpg)
+![Autoresearch dashboard screenshot](packages/vscode-extension/images/screenshot.jpg)
 
 ---
 
