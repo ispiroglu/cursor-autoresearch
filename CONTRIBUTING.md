@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- **Node.js** — **22.x** is what CI uses; [`.nvmrc`](.nvmrc) pins `22`. The root [`package.json`](package.json) `engines.node` field is `>=22` (newer LTS versions are fine).
+- **Node.js** — **22.x** is what CI uses; [`.node-version`](.node-version) pins `22`. The root [`package.json`](package.json) `engines.node` field is `>=22` (newer LTS versions are fine).
 - **pnpm** — version is pinned via `packageManager` in the root `package.json`; enable with [corepack](https://nodejs.org/api/corepack.html) (`corepack enable`) or install pnpm manually.
 
 ## Clone and install
