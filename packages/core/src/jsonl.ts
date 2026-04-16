@@ -85,9 +85,11 @@ export function loadStateFromJsonl(
           timestamp: typeof entry.timestamp === "number" ? entry.timestamp : 0,
           segment,
           confidence:
-            typeof entry.confidence === "number" || entry.confidence === null
+            typeof entry.confidence === "number"
               ? entry.confidence
-              : null,
+              : entry.confidence === null
+                ? null
+                : null,
           iterationTokens,
           asi:
             entry.asi && typeof entry.asi === "object"
