@@ -119,7 +119,7 @@ The dashboard endpoint uses SSE so updates in `autoresearch.jsonl` can be pushed
 
 ## Screenshot
 
-![Autoresearch dashboard screenshot](images/screenshot.jpg)
+![Autoresearch dashboard screenshot](packages/vscode-extension/images/screenshot.jpg)
 
 ---
 
