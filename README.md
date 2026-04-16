@@ -21,6 +21,7 @@ Port of **[pi-autoresearch](https://github.com/davebcn87/pi-autoresearch)** for 
 - [What you get](#what-you-get)
 - [How it works](#how-it-works)
 - [Technology stack](#technology-stack)
+- [npm packages](#npm-packages)
 - [Requirements](#requirements)
 - [Build (from a clone)](#build-from-a-clone)
 - [Install for Cursor](#install-for-cursor)
@@ -79,6 +80,28 @@ Port of **[pi-autoresearch](https://github.com/davebcn87/pi-autoresearch)** for 
 
 ---
 
+## npm packages
+
+Published packages:
+
+- [`@ergenekonyigit/cursor-autoresearch-core`](https://www.npmjs.com/package/@ergenekonyigit/cursor-autoresearch-core)
+- [`@ergenekonyigit/cursor-autoresearch-mcp-server`](https://www.npmjs.com/package/@ergenekonyigit/cursor-autoresearch-mcp-server)
+
+Install:
+
+```bash
+pnpm add @ergenekonyigit/cursor-autoresearch-core
+pnpm add -D @ergenekonyigit/cursor-autoresearch-mcp-server
+```
+
+Run MCP server directly with npx:
+
+```bash
+npx -y @ergenekonyigit/cursor-autoresearch-mcp-server
+```
+
+---
+
 ## Requirements
 
 - **Node.js** 22 or newer ([`engines.node`](package.json) in root `package.json`).
@@ -95,7 +118,9 @@ pnpm install
 pnpm build
 ```
 
-The MCP entrypoint after build is `packages/mcp-server/dist/index.js` — use an **absolute** path in the JSON examples below.
+The MCP entrypoint after build is `packages/mcp-server/dist/index.js` if you prefer local path-based setup.
+
+The JSON examples below use `npx -y @ergenekonyigit/cursor-autoresearch-mcp-server` for simpler setup.
 
 ---
 
@@ -130,10 +155,8 @@ Restart **Cursor** so MCP reloads.
 {
   "mcpServers": {
     "autoresearch": {
-      "command": "node",
-      "args": [
-        "/ABSOLUTE/PATH/TO/cursor-autoresearch/packages/mcp-server/dist/index.js"
-      ],
+      "command": "npx",
+      "args": ["-y", "@ergenekonyigit/cursor-autoresearch-mcp-server"],
       "env": {
         "AUTORESEARCH_CWD": "${workspaceFolder}"
       }
@@ -150,7 +173,7 @@ References: [Cursor MCP](https://cursor.com/docs/mcp/install-links), [Plugins / 
 
 Use this when you work in **VS Code** with **GitHub Copilot** and [MCP servers](https://code.visualstudio.com/docs/copilot/customization/mcp-servers).
 
-1. Complete [Build (from a clone)](#build-from-a-clone) (or use a checkout where `packages/mcp-server/dist/index.js` exists).
+1. If you use `npx` in the config below, no local clone is required. If you prefer a local path-based setup, complete [Build (from a clone)](#build-from-a-clone).
 2. Add `mcp.json`:
    - **Workspace:** `.vscode/mcp.json` in the folder you open, or
    - **User:** Command Palette → **MCP: Open User Configuration**.
@@ -161,10 +184,8 @@ Use this when you work in **VS Code** with **GitHub Copilot** and [MCP servers](
   "servers": {
     "autoresearch": {
       "type": "stdio",
-      "command": "node",
-      "args": [
-        "/ABSOLUTE/PATH/TO/cursor-autoresearch/packages/mcp-server/dist/index.js"
-      ],
+      "command": "npx",
+      "args": ["-y", "@ergenekonyigit/cursor-autoresearch-mcp-server"],
       "env": {
         "AUTORESEARCH_CWD": "${workspaceFolder}"
       }
@@ -188,7 +209,11 @@ Reference: [MCP configuration (VS Code)](https://code.visualstudio.com/docs/copi
 
 ## Extension (optional)
 
-Build a `.vsix` and install via **Extensions: Install from VSIX…**
+Install from Visual Studio Marketplace:
+
+- https://marketplace.visualstudio.com/items?itemName=ergenekonyigit.autoresearch
+
+Or build a `.vsix` and install via **Extensions: Install from VSIX…**
 
 ```bash
 pnpm package:extension
