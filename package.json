@@ -15,7 +15,7 @@
     "build": "pnpm --filter @cursor-autoresearch/core build && pnpm --filter @cursor-autoresearch/mcp-server build && pnpm --filter autoresearch run build",
     "test": "pnpm --filter @cursor-autoresearch/core test && pnpm --filter @cursor-autoresearch/mcp-server test && pnpm --filter autoresearch test",
     "package:extension": "pnpm build && pnpm --filter autoresearch exec vsce package --no-dependencies",
-    "lint": "eslint . --max-warnings 0 --no-warn-ignored"
+    "lint": "pnpm --filter @cursor-autoresearch/core build && eslint . --max-warnings 0 --no-warn-ignored"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
