@@ -2,7 +2,7 @@
   "name": "autoresearch",
   "displayName": "Autoresearch",
   "description": "Autonomous experiment loop: run, measure, keep or discard (pi-autoresearch port).",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "publisher": "ergenekonyigit",
   "license": "MIT",
   "repository": {
