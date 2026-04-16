@@ -1,0 +1,85 @@
+{
+  "name": "autoresearch",
+  "displayName": "Autoresearch",
+  "description": "Autonomous experiment loop: run, measure, keep or discard (pi-autoresearch port).",
+  "version": "0.1.0",
+  "publisher": "ergenekonyigit",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ergenekonyigit/cursor-autoresearch.git",
+    "directory": "packages/vscode-extension"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "autoresearch.showHelp",
+        "title": "Autoresearch: Help"
+      },
+      {
+        "command": "autoresearch.exportDashboard",
+        "title": "Autoresearch: Export dashboard (browser)"
+      },
+      {
+        "command": "autoresearch.modeOff",
+        "title": "Autoresearch: Turn mode off"
+      },
+      {
+        "command": "autoresearch.clearSession",
+        "title": "Autoresearch: Clear session (delete autoresearch.jsonl)"
+      },
+      {
+        "command": "autoresearch.resumePrompt",
+        "title": "Autoresearch: Start or resume (paste prompt)"
+      },
+      {
+        "command": "autoresearch.toggleExpanded",
+        "title": "Autoresearch: Toggle expanded status"
+      },
+      {
+        "command": "autoresearch.openResultsPanel",
+        "title": "Autoresearch: Open results panel"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "autoresearch.toggleExpanded",
+        "key": "ctrl+alt+x",
+        "when": "workspaceFolderCount > 0"
+      },
+      {
+        "command": "autoresearch.openResultsPanel",
+        "key": "ctrl+alt+shift+x",
+        "when": "workspaceFolderCount > 0"
+      }
+    ]
+  },
+  "scripts": {
+    "test": "vitest run",
+    "build": "pnpm run build:esbuild",
+    "build:esbuild": "esbuild src/extension.ts --bundle --platform=node --format=cjs --external:vscode --outfile=dist/extension.js --sourcemap",
+    "vscode:prepublish": "pnpm run build",
+    "package": "vsce package --no-dependencies"
+  },
+  "dependencies": {
+    "@cursor-autoresearch/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "@types/vscode": "^1.116.0",
+    "@vscode/vsce": "^3.9.0",
+    "esbuild": "^0.28.0",
+    "typescript": "^6.0.2",
+    "vitest": "^4.1.4"
+  }
+}
