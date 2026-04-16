@@ -1,18 +1,14 @@
 # ◈ Cursor Autoresearch
 
-**Autoresearch** is a single workflow for **Cursor** and **VS Code**: MCP tools drive a measurable optimization loop, results append to `**autoresearch.jsonl`**, you can add an optional browser dashboard and packaged **agent skills** (`autoresearch-create`, `autoresearch-finalize`).
+**Autoresearch** is a single workflow for **Cursor** and **VS Code**: MCP tools drive a measurable optimization loop, results append to `autoresearch.jsonl`, you can add an optional browser dashboard and packaged **agent skills** (`autoresearch-create`, `autoresearch-finalize`).
 
-
-|                              |                                                                                                             |
-| ---------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| **Open-source project name** | Cursor Autoresearch                                                                                         |
-| **GitHub repo**              | `[cursor-autoresearch](https://github.com/ergenekonyigit/cursor-autoresearch)` (easy to discover and share) |
-| **Product / UI name**        | **Autoresearch** (MCP server and marketplace extension)                                                     |
-
+| Field | Details |
+| ----- | ------- |
+| **Open-source project name** | Cursor Autoresearch |
+| **GitHub repo** | [cursor-autoresearch](https://github.com/ergenekonyigit/cursor-autoresearch) (easy to discover and share) |
+| **Product / UI name** | **Autoresearch** (MCP server and marketplace extension) |
 
 Port of **[pi-autoresearch](https://github.com/davebcn87/pi-autoresearch)** for editors that use **[pi](https://pi.dev/)** upstream in the terminal. Same idea as **[karpathy/autoresearch](https://github.com/karpathy/autoresearch)**: try a change, benchmark, keep wins, revert losses, repeat — for **any** primary metric (test time, bundle size, build time, Lighthouse, and more).
-
-**Docs site:** sources in `[docs-site/](docs-site/)`. [GitHub Actions](.github/workflows/deploy-docs.yml) publishes to the `**docs`** branch on push to `main` / `master`. In **Settings → Pages**, use branch `**docs`**, folder `**/**`. Site URL: `https://<user>.github.io/cursor-autoresearch/`.
 
 ---
 
@@ -38,53 +34,49 @@ Port of **[pi-autoresearch](https://github.com/davebcn87/pi-autoresearch)** for 
 
 - **Closed optimization loop** in your repo: one primary metric (e.g. wall-clock seconds, lower is better), agent edits code, a fixed benchmark script measures outcomes, every run is recorded so sessions can resume.
 - **Three MCP tools:** `init_experiment` → `run_experiment` → `log_experiment` (see [How it works](#how-it-works)).
-- **Session artifacts:** `autoresearch.md` (goal, scope, what you tried), `autoresearch.sh` (repeatable benchmark; stdout must emit `**METRIC name=value`**), optional `autoresearch.config.json`.
-- **Monorepo packages:** shared engine in `**packages/core`**, `**packages/mcp-server**` (stdio MCP), `**packages/vscode-extension**` (status bar, commands, local HTTP + SSE dashboard, results webview).
-- **Skills** under `[skills/](skills/)` for starting and finalizing autoresearch sessions (Cursor-oriented paths documented below).
+- **Session artifacts:** `autoresearch.md` (goal, scope, what you tried), `autoresearch.sh` (repeatable benchmark; stdout must emit `METRIC name=value`), optional `autoresearch.config.json`.
+- **Monorepo packages:** shared engine in `packages/core`, `packages/mcp-server` (stdio MCP), `packages/vscode-extension` (status bar, commands, local HTTP + SSE dashboard, results webview).
+- **Skills** under [`skills/`](skills/) for starting and finalizing autoresearch sessions (Cursor-oriented paths documented below).
 
 ---
 
 ## How it works
 
-1. `**init_experiment`** — Name the run and set metric direction (higher/lower is better).
-2. `**run_experiment**` — Runs your benchmark (commonly `**./autoresearch.sh**`). Parses `**METRIC name=value**` from **stdout**.
-3. `**log_experiment`** — Appends a line to `**autoresearch.jsonl**`. Outcomes like `**keep**` can auto-commit; `**discard**`, `**crash**`, or failed checks can revert code while keeping autoresearch files.
+1. `init_experiment` — Name the run and set metric direction (higher/lower is better).
+2. `run_experiment` — Runs your benchmark (commonly `./autoresearch.sh`). Parses `METRIC name=value` from **stdout**.
+3. `log_experiment` — Appends a line to `autoresearch.jsonl`. Outcomes like `keep` can auto-commit; `discard`, `crash`, or failed checks can revert code while keeping autoresearch files.
 
 **Typical workspace layout**
 
-
-| File / convention              | Role                                                             |
-| ------------------------------ | ---------------------------------------------------------------- |
-| `**autoresearch.md`**          | Goal, scope, “what we tried” — keep it current.                  |
-| `**autoresearch.sh**`          | Repeatable benchmark; metric names must match `init_experiment`. |
-| `**autoresearch.config.json**` | Optional — e.g. `maxIterations`, `workingDir`.                   |
-| Branch name                    | Often `autoresearch/<goal>-<date>`.                              |
-
+| File / convention | Role |
+| ----------------- | ---- |
+| `autoresearch.md` | Goal, scope, “what we tried” — keep it current. |
+| `autoresearch.sh` | Repeatable benchmark; metric names must match `init_experiment`. |
+| `autoresearch.config.json` | Optional — e.g. `maxIterations`, `workingDir`. |
+| Branch name | Often `autoresearch/<goal>-<date>`. |
 
 > [!NOTE]
-> `**AUTORESEARCH_CWD**` must point at the **project you optimize** (where `autoresearch.jsonl` and `autoresearch.md` live), usually `${workspaceFolder}` — not necessarily the clone of this repo.
+> `AUTORESEARCH_CWD` must point at the **project you optimize** (where `autoresearch.jsonl` and `autoresearch.md` live), usually `${workspaceFolder}` — not necessarily the clone of this repo.
 
 ---
 
 ## Technology stack
 
-
-| Layer               | Details                                                                    |
-| ------------------- | -------------------------------------------------------------------------- |
-| **Runtime**         | Node.js **≥ 22** (CI uses 22.x; see `[.node-version](.node-version)`)      |
-| **Package manager** | **pnpm** 10.x (pinned in root `packageManager`)                            |
-| **Language**        | TypeScript **6.x**                                                         |
-| **Core / MCP**      | `@modelcontextprotocol/sdk`, workspace package `@cursor-autoresearch/core` |
-| **Extension**       | esbuild bundle, `@vscode/vsce`, VS Code engine **^1.85.0**                 |
-| **Tests**           | Vitest **4.x** (`pnpm test` runs all packages)                             |
-| **Lint**            | ESLint **10.x** (`pnpm lint`)                                              |
-
+| Layer | Details |
+| ----- | ------- |
+| **Runtime** | Node.js **≥ 22** (CI uses 22.x; see [`.node-version`](.node-version)) |
+| **Package manager** | **pnpm** 10.x (pinned in root `packageManager`) |
+| **Language** | TypeScript **6.x** |
+| **Core / MCP** | `@modelcontextprotocol/sdk`, workspace package `@cursor-autoresearch/core` |
+| **Extension** | esbuild bundle, `@vscode/vsce`, VS Code engine **^1.85.0** |
+| **Tests** | Vitest **4.x** (`pnpm test` runs all packages) |
+| **Lint** | ESLint **10.x** (`pnpm lint`) |
 
 ---
 
 ## Requirements
 
-- **Node.js** 22 or newer (`[engines.node](package.json)` in root `package.json`).
+- **Node.js** 22 or newer ([`engines.node`](package.json) in root `package.json`).
 - **pnpm** — enable with [Corepack](https://nodejs.org/api/corepack.html) (`corepack enable`) or install manually to match the pinned version.
 
 ---
@@ -98,7 +90,7 @@ pnpm install
 pnpm build
 ```
 
-The MCP entrypoint after build is `**packages/mcp-server/dist/index.js**` — use an **absolute** path in the JSON examples below.
+The MCP entrypoint after build is `packages/mcp-server/dist/index.js` — use an **absolute** path in the JSON examples below.
 
 ---
 
@@ -112,14 +104,12 @@ Clones to `~/.local/share/cursor-autoresearch` by default, merges `~/.cursor/mcp
 curl -fsSL https://raw.githubusercontent.com/ergenekonyigit/cursor-autoresearch/main/scripts/bootstrap.sh | bash
 ```
 
-
-| Variable      | Default                                                     | Meaning                                               |
-| ------------- | ----------------------------------------------------------- | ----------------------------------------------------- |
-| `INSTALL_DIR` | `$HOME/.local/share/cursor-autoresearch`                    | Clone path                                            |
-| `REPO_URL`    | `https://github.com/ergenekonyigit/cursor-autoresearch.git` | Git remote                                            |
-| `SKIP_MCP`    | —                                                           | Set to `1` to skip writing `~/.cursor/mcp.json`       |
-| `SKIP_SKILLS` | —                                                           | Set to `1` to skip symlinks under `~/.agents/skills/` |
-
+| Variable | Default | Meaning |
+| -------- | --------- | ------- |
+| `INSTALL_DIR` | `$HOME/.local/share/cursor-autoresearch` | Clone path |
+| `REPO_URL` | `https://github.com/ergenekonyigit/cursor-autoresearch.git` | Git remote |
+| `SKIP_MCP` | — | Set to `1` to skip writing `~/.cursor/mcp.json` |
+| `SKIP_SKILLS` | — | Set to `1` to skip symlinks under `~/.agents/skills/` |
 
 ### Already cloned this repo?
 
@@ -154,10 +144,10 @@ References: [Cursor MCP](https://cursor.com/docs/mcp/install-links), [Plugins / 
 Use this when you work in **VS Code** with **GitHub Copilot** and [MCP servers](https://code.visualstudio.com/docs/copilot/customization/mcp-servers).
 
 1. Complete [Build (from a clone)](#build-from-a-clone) (or use a checkout where `packages/mcp-server/dist/index.js` exists).
-2. Add `**mcp.json`**:
-  - **Workspace:** `.vscode/mcp.json` in the folder you open, or  
-  - **User:** Command Palette → **MCP: Open User Configuration**.
-3. Use the `**servers`** shape (not `mcpServers`):
+2. Add `mcp.json`:
+   - **Workspace:** `.vscode/mcp.json` in the folder you open, or
+   - **User:** Command Palette → **MCP: Open User Configuration**.
+3. Use the `servers` shape (not `mcpServers`):
 
 ```json
 {
@@ -174,16 +164,16 @@ Use this when you work in **VS Code** with **GitHub Copilot** and [MCP servers](
 }
 ```
 
-1. Reload the window (**Developer: Reload Window**) or restart VS Code.
+4. Reload the window (**Developer: Reload Window**) or restart VS Code.
 
 Reference: [MCP configuration (VS Code)](https://code.visualstudio.com/docs/copilot/reference/mcp-configuration).
 
 > [!TIP]
-> **Bootstrap / `pnpm install:cursor`** only updates `**~/.cursor/mcp.json**`. For VS Code–only setups, run the bootstrap script with `**SKIP_MCP=1**` if you want clone + build + skills without changing Cursor’s config, then add `.vscode/mcp.json` or user `mcp.json` as above.
+> **Bootstrap / `pnpm install:cursor`** only updates `~/.cursor/mcp.json`. For VS Code–only setups, run the bootstrap script with `SKIP_MCP=1` if you want clone + build + skills without changing Cursor’s config, then add `.vscode/mcp.json` or user `mcp.json` as above.
 
-**Skills path:** Files under `~/.agents/skills/` are aimed at Cursor-style loading. VS Code does not use that path automatically — use Copilot instructions, prompts, or adapt ideas from `[skills/](skills/)`.
+**Skills path:** Files under `~/.agents/skills/` are aimed at Cursor-style loading. VS Code does not use that path automatically — use Copilot instructions, prompts, or adapt ideas from [`skills/`](skills/).
 
-**Rules:** `[.cursor/rules/](.cursor/rules/)` apply in Cursor; for VS Code, copy the intent into project or user instructions if you want similar behavior.
+**Rules:** [`.cursor/rules/`](.cursor/rules/) apply in Cursor; for VS Code, copy the intent into project or user instructions if you want similar behavior.
 
 ---
 
@@ -208,24 +198,24 @@ ln -sfn "$PWD/skills/autoresearch-create" ~/.agents/skills/autoresearch-create
 ln -sfn "$PWD/skills/autoresearch-finalize" ~/.agents/skills/autoresearch-finalize
 ```
 
-You can also symlink into `**.cursor/skills/**` (e.g. `autoresearch-create` → `../../skills/autoresearch-create`) for workspace-only discovery. Nothing in the build requires these symlinks.
+You can also symlink into `.cursor/skills/` (e.g. `autoresearch-create` → `../../skills/autoresearch-create`) for workspace-only discovery. Nothing in the build requires these symlinks.
 
 ---
 
 ## Cursor rule (optional)
 
-`[.cursor/rules/autoresearch-active.mdc](.cursor/rules/autoresearch-active.mdc)` nudges the agent to use MCP tools and keep `autoresearch.md` in sync when `autoresearch.jsonl` exists. Copy or symlink into another repo’s `.cursor/rules/` if useful.
+[`.cursor/rules/autoresearch-active.mdc`](.cursor/rules/autoresearch-active.mdc) nudges the agent to use MCP tools and keep `autoresearch.md` in sync when `autoresearch.jsonl` exists. Copy or symlink into another repo’s `.cursor/rules/` if useful.
 
 ---
 
 ## Example: faster tests (e.g. Vitest)
 
-**Prompt idea:** *Reduce how long `**npm run test`** takes — set up autoresearch and speed it up.* (Use `pnpm test`, `pnpm vitest run`, etc., to match your repo.)
+**Prompt idea:** *Reduce how long `npm run test` takes — set up autoresearch and speed it up.* (Use `pnpm test`, `pnpm vitest run`, etc., to match your repo.)
 
 1. Create a branch such as `autoresearch/vitest-speed-<date>`.
-2. Add `**autoresearch.md*`* and `**autoresearch.sh**`, commit so the next session can resume.
-3. MCP: `**init_experiment**` (e.g. metric `**vitest_seconds**`, lower is better) → baseline `**run_experiment**` + `**log_experiment**`.
-4. Iterate: change config → `**run_experiment**` → `**log_experiment**` with **keep** / **discard** until done or `**maxIterations`** hits.
+2. Add `autoresearch.md` and `autoresearch.sh`, commit so the next session can resume.
+3. MCP: `init_experiment` (e.g. metric `vitest_seconds`, lower is better) → baseline `run_experiment` + `log_experiment`.
+4. Iterate: change config → `run_experiment` → `log_experiment` with **keep** / **discard** until done or `maxIterations` hits.
 
 Minimal benchmark (adjust the inner command; metric names must match `init_experiment`):
 
@@ -236,20 +226,18 @@ SECS="$(/usr/bin/time -p npm run test 2>&1 | awk '/^real/ {print $2}')"
 echo "METRIC vitest_seconds=$SECS"
 ```
 
-If you use `**pnpm exec vitest run**`, substitute accordingly. For very fast suites, averaging or median inside the script can stabilize the metric.
+If you use `pnpm exec vitest run`, substitute accordingly. For very fast suites, averaging or median inside the script can stabilize the metric.
 
 ---
 
 ## Configuration
 
-Place `**autoresearch.config.json**` next to `**autoresearch.jsonl**` — under the directory `**AUTORESEARCH_CWD**` points at (usually `${workspaceFolder}`), i.e. your **optimized project**, not the `cursor-autoresearch` clone.
+Place `autoresearch.config.json` next to `autoresearch.jsonl` — under the directory `AUTORESEARCH_CWD` points at (usually `${workspaceFolder}`), i.e. your **optimized project**, not the `cursor-autoresearch` clone.
 
-
-| Key                 | Purpose                                                                                                                                                                                                |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `**maxIterations`** | Cap on counted runs in the current segment; start a new segment with `init_experiment` after that. Omit for no cap.                                                                                    |
-| `**workingDir**`    | Run benchmarks / resolve paths relative to this directory (absolute or relative to workspace root). The JSON file stays at workspace root; validation fails if the path is missing or not a directory. |
-
+| Key | Purpose |
+| --- | ------- |
+| `maxIterations` | Cap on counted runs in the current segment; start a new segment with `init_experiment` after that. Omit for no cap. |
+| `workingDir` | Run benchmarks / resolve paths relative to this directory (absolute or relative to workspace root). The JSON file stays at workspace root; validation fails if the path is missing or not a directory. |
 
 ```json
 {
@@ -270,16 +258,14 @@ pnpm build
 pnpm test
 ```
 
-
-| Command                  | Purpose                                               |
-| ------------------------ | ----------------------------------------------------- |
-| `pnpm lint`              | ESLint across the repo                                |
-| `pnpm typecheck`         | TypeScript `--noEmit` for all workspace packages      |
-| `pnpm build`             | Build `core`, `mcp-server`, and the VS Code extension |
-| `pnpm test`              | All package tests                                     |
-| `pnpm clean`             | Remove `packages/*/dist`                              |
-| `pnpm package:extension` | Produce `.vsix` under `packages/vscode-extension/`    |
-
+| Command | Purpose |
+| ------- | ------- |
+| `pnpm lint` | ESLint across the repo |
+| `pnpm typecheck` | TypeScript `--noEmit` for all workspace packages |
+| `pnpm build` | Build `core`, `mcp-server`, and the VS Code extension |
+| `pnpm test` | All package tests |
+| `pnpm clean` | Remove `packages/*/dist` |
+| `pnpm package:extension` | Produce `.vsix` under `packages/vscode-extension/` |
 
 After `pnpm clean`, run `pnpm build` before `pnpm test` so workspace resolution and Vitest aliases stay consistent.
 
