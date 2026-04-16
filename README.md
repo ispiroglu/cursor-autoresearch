@@ -1,7 +1,7 @@
 # ◈ Cursor Autoresearch
 
 <p align="center">
-  <img src="packages/vscode-extension/assets/icon.png" alt="Autoresearch icon" />
+  <img src="packages/vscode-extension/images/icon.png" alt="Autoresearch icon" />
 </p>
 
 **Autoresearch** is a single workflow for **Cursor** and **VS Code**: MCP tools drive a measurable optimization loop, results append to `autoresearch.jsonl`, you can add an optional browser dashboard and packaged **agent skills** (`autoresearch-create`, `autoresearch-finalize`).
@@ -225,7 +225,7 @@ pnpm package:extension
 
 ## Screenshot
 
-![Autoresearch dashboard screenshot](packages/vscode-extension/assets/screenshot.png)
+![Autoresearch dashboard screenshot](packages/vscode-extension/assets/screenshot.jpg)
 
 ---
 

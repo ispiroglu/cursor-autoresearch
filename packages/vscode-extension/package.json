@@ -2,7 +2,7 @@
   "name": "autoresearch",
   "displayName": "Autoresearch",
   "description": "Autonomous experiment loop: run, measure, keep or discard (pi-autoresearch port).",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "ergenekonyigit",
   "license": "MIT",
   "repository": {
@@ -10,7 +10,7 @@
     "url": "https://github.com/ergenekonyigit/cursor-autoresearch.git",
     "directory": "packages/vscode-extension"
   },
-  "icon": "assets/icon.png",
+  "icon": "images/icon.png",
   "engines": {
     "vscode": "^1.105.0"
   },

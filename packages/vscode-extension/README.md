@@ -1,9 +1,5 @@
 # Cursor Autoresearch Extension
 
-<p align="center">
-	<img src="assets/icon.png" alt="Autoresearch icon" />
-</p>
-
 The Marketplace package is listed as **Autoresearch**. This package provides the VS Code UI layer for the Cursor Autoresearch workflow: status visibility, session actions, dashboard export, and a results panel.
 
 Repository: [ergenekonyigit/cursor-autoresearch](https://github.com/ergenekonyigit/cursor-autoresearch)
@@ -123,7 +119,7 @@ The dashboard endpoint uses SSE so updates in `autoresearch.jsonl` can be pushed
 
 ## Screenshot
 
-![Autoresearch dashboard screenshot](assets/screenshot.png)
+![Autoresearch dashboard screenshot](images/screenshot.jpg)
 
 ---
 
