@@ -31,7 +31,7 @@ Repository: [ergenekonyigit/cursor-autoresearch](https://github.com/ergenekonyig
 For a quick setup, you can run the following one-shot script which installs dependencies, builds the project, and configures the MCP server and skills:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ergenekonyigit/cursor-autoresearch/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/ergenekonyigit/cursor-autoresearch/main/scripts/bootstrap.sh | bash
 ```
 
 ---
