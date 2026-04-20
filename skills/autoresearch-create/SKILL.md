@@ -11,7 +11,7 @@ Autonomous experiment loop: try ideas, keep what works, discard what doesn't, ne
 
 - **`init_experiment`** — configure session (name, metric, unit, direction). Call again to re-initialize with a new baseline when the optimization target changes.
 - **`run_experiment`** — runs command, times it, captures output.
-- **`log_experiment`** — records result. `keep` auto-commits. `discard`/`crash`/`checks_failed` auto-reverts code changes (autoresearch files preserved). Always include secondary `metrics` dict. Dashboard: command **Autoresearch: Export dashboard (browser)** or status bar; expand detail with **Ctrl+Alt+X** (VS Code/Cursor).
+- **`log_experiment`** — records result. `keep` auto-commits. `discard`/`crash`/`checks_failed` auto-reverts code changes (autoresearch files preserved). Always include secondary `metrics` dict. **`asi` must always include `hypothesis`, `rollback_reason`, and `next_action_hint`** (see below). Dashboard: command **Autoresearch: Export dashboard (browser)** or status bar; expand detail with **Ctrl+Alt+X** (VS Code/Cursor).
 
 ## Setup
 
@@ -75,11 +75,29 @@ The script should output **whatever data helps you make better decisions in the 
 
 The script runs the same code every iteration — but you can **update it during the loop** if you discover you need more signal. Add instrumentation as you learn what matters.
 
-#### Agent-supplied ASI via `log_experiment`
+#### Required `asi` keys (every `log_experiment`)
 
-Use `log_experiment`'s `asi` parameter to annotate each run with **whatever would help the next iteration make a better decision.** Free-form key/value pairs — you decide what's worth recording. Don't repeat the description or raw output; capture what you'd lose after a context reset.
+The VS Code/Cursor dashboard maps three columns from **fixed** `asi` keys. **Every** `log_experiment` call must pass a non-empty string for each:
 
-**Annotate failures and crashes heavily.** Discarded and crashed runs are reverted — the code changes are gone. The only record that survives is the description and ASI in `autoresearch.jsonl`. If you don't capture what you tried and why it failed, future iterations will waste time re-discovering the same dead ends.
+| Key | Meaning |
+|-----|---------|
+| `hypothesis` | What you believe this change will do to the primary metric and why (one or two sentences). |
+| `rollback_reason` | If status is `discard`, `crash`, or `checks_failed`: why the change failed or was rejected (the revert survives only here). If status is `keep`: a short confirmation of why you kept (e.g. primary metric improved vs baseline; checks passed). |
+| `next_action_hint` | The single most useful follow-up for the **next** iteration (or a literal `none` if there is nothing left to try). |
+
+Example:
+
+```json
+"asi": {
+  "hypothesis": "Caching parsed config avoids re-read on each iteration; should lower total_µs.",
+  "rollback_reason": "discard: median regressed 4% vs baseline; hypothesis wrong for this workload.",
+  "next_action_hint": "Try lazy parse only on first access; profile hot path before more caching."
+}
+```
+
+You may add **additional** `asi` keys for extra signal (secondary-metric notes, profiler takeaways, etc.). Do not repeat the full `description` or raw benchmark output — capture what a fresh agent would need after a context reset.
+
+**Annotate failures and crashes heavily in `rollback_reason`.** Discarded and crashed runs are reverted — the code changes are gone. The only durable record is `description` plus `asi` in `autoresearch.jsonl`.
 
 ### `autoresearch.config.json` (optional)
 
@@ -123,7 +141,7 @@ pnpm typecheck 2>&1 | grep -i error || true
 **LOOP FOREVER.** Never ask "should I continue?" — the user expects autonomous work.
 
 - **Primary metric is king.** Improved → `keep`. Worse/equal → `discard`. Secondary metrics rarely affect this.
-- **Annotate every run with `asi`.** Record what you learned — not what you did. What would help the next iteration or a fresh agent resuming this session?
+- **Every `log_experiment` must include `asi` with `hypothesis`, `rollback_reason`, and `next_action_hint`** (non-empty strings). Optionally add more keys. This feeds the dashboard and makes resumes cheap.
 - **Watch the confidence score.** After 3+ runs, `log_experiment` reports a confidence score (best improvement as a multiple of the session noise floor). ≥2.0× means the improvement is likely real. <1.0× means it's within noise — consider re-running to confirm before keeping. The score is advisory — it never auto-discards.
 - **Simpler is better.** Removing code for equal perf = keep. Ugly complexity for tiny gain = probably discard.
 - **Don't thrash.** Repeatedly reverting the same idea? Try something structurally different.

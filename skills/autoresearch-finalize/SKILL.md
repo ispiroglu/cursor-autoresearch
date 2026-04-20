@@ -10,7 +10,7 @@ Turn a noisy autoresearch branch into clean, independent branches — one per lo
 
 ## Step 1 — Analyze and Propose Groups
 
-1. Read `autoresearch.jsonl`. Filter to **kept** experiments only.
+1. Read `autoresearch.jsonl`. Filter to **kept** experiments only. When summarizing or naming groups, use each run's `asi` if present — especially `hypothesis` and `next_action_hint` from the **create** skill (required there for every log) — so branch titles and `groups[].body` reflect intent, not only metrics.
 2. Read `autoresearch.md` for context.
 3. Expand all short commit hashes to full hashes: `git rev-parse <short_hash>`
 4. Get the merge-base: `git merge-base HEAD main`
